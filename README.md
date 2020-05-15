@@ -1,3 +1,49 @@
+# React Dropdown Component
+
+## Basic Usage
+```
+import React, { Component } from 'react'
+import Dropdown from './Dropdown'
+
+const options = ['Option 1', 'Option 2', 'Option 3']
+
+export default class App extends Component{
+  return (
+    <div>
+      <Dropdown title='Title' options={options} multiselect={true} search={true} selectAll={true}/>
+    </div>
+  );
+}
+```
+
+## Required Props
+
+### `title`
+The label passed to the dropdown.
+
+### `options`
+An array of strings.
+
+### `onValueChange`
+Callback function from parent component to handle selected value changes 
+
+## Optional Props
+
+### `multiselect` 
+Enables the ability to select multiple items in dropdown
+
+By default, this value is `false`.
+
+### `search` 
+Enables the ability to search for items.
+
+Note that if search is enabled, user must click on arrow icon to the right to close dropdown.
+
+### `selectAll` 
+Enables select all and deselect all functionality. Note that this only works if `multiselect` is also set to `true`
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

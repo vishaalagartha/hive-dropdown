@@ -9,7 +9,8 @@ export default class Dropdown extends Component {
     this.state = {
       isOpen: false,
       title: this.props.title,
-      options: this.props.options.map(o => { return {label: o, selected: false}}),
+      options: this.props.options.map(o => { return {label: o, selected: false, show: true}}),
+      query: '',
       wrapperRef: null
     }
 
@@ -17,6 +18,7 @@ export default class Dropdown extends Component {
     this.handleClickOutside = this.handleClickOutside.bind(this)
   }
 
+  /* Functionality to handle click outside using a wrapper reference */
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);
   }
@@ -25,10 +27,12 @@ export default class Dropdown extends Component {
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
+  /* Set wrapper reference */ 
   setWrapperRef = node => {
     this.setState({...this.state, wrapperRef: node})
   }
 
+  /* If clicks are outside wrapper reference, close the dropdown */
   handleClickOutside = e => {
     const { wrapperRef } = this.state
     if (wrapperRef && !wrapperRef.contains(e.target)) {
@@ -36,10 +40,37 @@ export default class Dropdown extends Component {
     }
   }
 
-  toggleDropdown = () => {
-    this.setState({...this.state, isOpen: !this.state.isOpen})
+  /* Parent's callback */
+  handleDropdownValueChange = () => {
+    const selectedOptions = this.state.options.filter(o => o.selected)
+                                              .map(o => o.label)
+    this.props.onValueChange(selectedOptions)
   }
 
+  /* Toggle the dropdown */
+  toggleDropdown = (fromIcon, e) => {
+    const {search} = this.props
+    const {isOpen} = this.state
+    // If search is enabled, only close
+    // when user clicks on arrow icon
+    if(search){
+      if(isOpen && fromIcon){
+        e.stopPropagation()
+        this.setState({...this.state, isOpen: false})
+      }
+      else{
+        this.setState({...this.state, isOpen: true})
+      }
+
+    }
+    // If search is disabled, flip state whenever user
+    // clicks inside dropdown label
+    else{
+      this.setState({...this.state, isOpen: !isOpen})
+    }
+  }
+
+  /* Modify selected items */
   toggleSelect = i => {
     const {options} = this.state
     const {multiselect} = this.props
@@ -60,14 +91,50 @@ export default class Dropdown extends Component {
       newOptions[i].selected = true
       this.setState({...this.state, options: newOptions, title: newOptions[i].label})
     }
+    this.handleDropdownValueChange()
   }
 
+  /* Set all options to selected */
+  selectAll = () => {
+    const newOptions = this.state.options.map(o => {
+      return {...o, selected: true}
+    })
+    this.setState({...this.state, options: newOptions})
+    this.handleDropdownValueChange()
+  }
+
+  /* Set all options to be deselected */
+  deselectAll = () => {
+    const newOptions = this.state.options.map(o => {
+      return {...o, selected: false}
+    })
+    this.setState({...this.state, options: newOptions})
+    this.handleDropdownValueChange()
+  }
+
+  /* Handle search queries */
+  handleSearch = e => {
+    const query = e.target.value
+    const newOptions = this.state.options.map(o => {
+      // Check if query substring is inside the option label
+      if(o.label.toUpperCase().indexOf(query.toUpperCase())>-1){
+        return {...o, show: true}
+      }
+      else {
+        return {...o, show: false}
+      }
+
+    })
+    this.setState({...this.state, query, options: newOptions})
+  }
+
+  /* Helper function to render options */
   renderOptions = () => {
     const {options} = this.state
     return (
       <div>
         {
-          options.map((o, i) => {
+          options.filter(o => o.show).map((o, i) => {
             return (
               <li key={i} onClick={() => this.toggleSelect(i)} className={o.selected ? 'active' : null}>
                 <label style={o.selected ? {fontWeight: 'bold'} : null}>{o.label}</label>
@@ -86,19 +153,31 @@ export default class Dropdown extends Component {
 
 
   render() {
-    const{isOpen, title} = this.state
+    const {search, multiselect, selectAll} = this.props
+    const{isOpen, title, query} = this.state
     return (
       <div ref={this.setWrapperRef} className='wrapper-dropdown'>
-        <div onClick={this.toggleDropdown}>
-          {title}
-          {isOpen ? <IoIosArrowDown style={{float: 'right'}}/> : <IoIosArrowUp style={{float: 'right'}}/>}
+        <div onClick={() => this.toggleDropdown(false)}>
+          { search && isOpen ?
+            <input placeholder='Search...' size='20' value={query} onChange={this.handleSearch}/>
+            :
+            title
+          }
+          {isOpen ? <IoIosArrowDown className='icon-right' onClick={(e) => this.toggleDropdown(true, e)}/> : <IoIosArrowUp className='icon-right'/>}
         </div>
         { isOpen ? 
-            <ul className='wrapper-list'>
+            <ul style={multiselect ? {marginTop: '80px'} : null} className='wrapper-list'>
               {this.renderOptions()}
             </ul>
           : null
         }
+          { isOpen && multiselect  && selectAll ?
+            <ul className='options'>
+              <li onClick={this.selectAll}><label>Select All</label></li>
+              <li onClick={this.deselectAll}><label>Deselect All</label></li>
+            </ul>
+            : null
+          }
       </div>
     )
   }
