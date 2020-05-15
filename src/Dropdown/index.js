@@ -78,7 +78,8 @@ export default class Dropdown extends Component {
     // If multiselect, toggle current selected value
     if(multiselect){
       options[i].selected = !options[i].selected
-      this.setState({...this.state, options}, () => this.handleDropdownValueChange())
+      const title = options.filter(o => o.selected).map(o => o.label).join()
+      this.setState({...this.state, options, title}, () => this.handleDropdownValueChange())
     }
     // If single select, make all options to be inactive except for selected one
     else{
@@ -98,7 +99,8 @@ export default class Dropdown extends Component {
     const newOptions = this.state.options.filter(o => o.show).map(o => {
       return {...o, selected: true}
     })
-    this.setState({...this.state, options: newOptions}, () => this.handleDropdownValueChange())
+    const title = newOptions.filter(o => o.selected).map(o => o.label).join()
+    this.setState({...this.state, options: newOptions, title}, () => this.handleDropdownValueChange())
   }
 
   /* Set all options to be deselected */
@@ -155,9 +157,14 @@ export default class Dropdown extends Component {
     return (
       <div ref={this.setWrapperRef} className='wrapper-dropdown'>
         <div onClick={() => this.toggleDropdown(false)}>
-          { search && isOpen ?
-            <input placeholder='Search...' size='20' value={query} onChange={this.handleSearch}/>
-            :
+          { search ?
+            (
+              isOpen ?
+              <input placeholder='Search...' size='20' value={query} onChange={this.handleSearch}/>
+              :
+              title
+            )
+            : 
             title
           }
           {isOpen ? <IoIosArrowDown className='icon-right' onClick={(e) => this.toggleDropdown(true, e)}/> : <IoIosArrowUp className='icon-right'/>}
