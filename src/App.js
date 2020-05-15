@@ -18,7 +18,7 @@ function App() {
       <header className='header'>
         Hive Dropdown Demo
       </header>
-      <Dropdown title='Title' options={options} onValueChange={logOptions} multiselect={true} search={true} selectAll={true}/>
+      <Dropdown title='My Title' options={options} onValueChange={logOptions} multiselect={true} search={true} selectAll={true}/>
     </div>
   );
 }

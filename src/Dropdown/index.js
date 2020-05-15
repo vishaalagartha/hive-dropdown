@@ -78,7 +78,7 @@ export default class Dropdown extends Component {
     // If multiselect, toggle current selected value
     if(multiselect){
       options[i].selected = !options[i].selected
-      this.setState({...this.state, options})
+      this.setState({...this.state, options}, () => this.handleDropdownValueChange())
     }
     // If single select, make all options to be inactive except for selected one
     else{
@@ -89,27 +89,24 @@ export default class Dropdown extends Component {
         return {...o, selected: false}
       })
       newOptions[i].selected = true
-      this.setState({...this.state, options: newOptions, title: newOptions[i].label})
+      this.setState({...this.state, options: newOptions, title: newOptions[i].label}, () => this.handleDropdownValueChange())
     }
-    this.handleDropdownValueChange()
   }
 
   /* Set all options to selected */
   selectAll = () => {
-    const newOptions = this.state.options.map(o => {
+    const newOptions = this.state.options.filter(o => o.show).map(o => {
       return {...o, selected: true}
     })
-    this.setState({...this.state, options: newOptions})
-    this.handleDropdownValueChange()
+    this.setState({...this.state, options: newOptions}, () => this.handleDropdownValueChange())
   }
 
   /* Set all options to be deselected */
   deselectAll = () => {
-    const newOptions = this.state.options.map(o => {
+    const newOptions = this.state.options.filter(o => o.show).map(o => {
       return {...o, selected: false}
     })
-    this.setState({...this.state, options: newOptions})
-    this.handleDropdownValueChange()
+    this.setState({...this.state, options: newOptions}, () => this.handleDropdownValueChange())
   }
 
   /* Handle search queries */
@@ -166,7 +163,7 @@ export default class Dropdown extends Component {
           {isOpen ? <IoIosArrowDown className='icon-right' onClick={(e) => this.toggleDropdown(true, e)}/> : <IoIosArrowUp className='icon-right'/>}
         </div>
         { isOpen ? 
-            <ul style={multiselect ? {marginTop: '80px'} : null} className='wrapper-list'>
+            <ul style={multiselect && selectAll ? {marginTop: '80px'} : null} className='wrapper-list'>
               {this.renderOptions()}
             </ul>
           : null
