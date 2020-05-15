@@ -78,7 +78,7 @@ export default class Dropdown extends Component {
     if(multiselect){
       options[index].selected = !options[index].selected
       console.log('multiselect', options[index])
-      const title = getTitle(options) 
+      const title = getTitle(options, this.props.title) 
       this.setState({...this.state, options, title}, () => this.handleDropdownValueChange())
     }
     // If single select, make all options to be inactive except for selected one
@@ -99,7 +99,7 @@ export default class Dropdown extends Component {
     const newOptions = this.state.options.filter(o => o.show).map(o => {
       return {...o, selected: true}
     })
-    const title = getTitle(newOptions) 
+    const title = getTitle(newOptions, this.props.title) 
     this.setState({...this.state, options: newOptions, title}, () => this.handleDropdownValueChange())
   }
 
@@ -167,7 +167,7 @@ export default class Dropdown extends Component {
             : 
             title
           }
-          {isOpen ? <IoIosArrowDown className='icon-right' onClick={(e) => this.toggleDropdown(true, e)}/> : <IoIosArrowUp className='icon-right'/>}
+          {isOpen ? <IoIosArrowUp className='icon-right' onClick={(e) => this.toggleDropdown(true, e)}/> : <IoIosArrowDown className='icon-right'/>}
         </div>
         { isOpen ? 
             <ul style={multiselect && selectAll ? {marginTop: '80px'} : null} className='wrapper-list'>

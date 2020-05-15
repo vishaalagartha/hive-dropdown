@@ -1,4 +1,4 @@
-# React Dropdown Component
+# hive-dropdown
 
 ## Basic Usage
 ```
@@ -7,7 +7,7 @@ import Dropdown from './Dropdown'
 
 const options = ['Option 1', 'Option 2', 'Option 3']
 
-export default class App extends Component{
+function App(){
   return (
     <div>
       <Dropdown title='Title' options={options} multiselect={true} search={true} selectAll={true}/>
@@ -112,5 +112,3 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-# hive-dropdown
-# hive-dropdown
