@@ -160,7 +160,7 @@ export default class Dropdown extends Component {
           { search ?
             (
               isOpen ?
-              <input placeholder='Search...' size='20' value={query} onChange={this.handleSearch}/>
+              <input placeholder='Search...' size='16' value={query} onChange={this.handleSearch}/>
               :
               title
             )
