@@ -1,0 +1,57 @@
+.wrapper-dropdown {
+  position: relative;
+  width: 200px;
+  margin: 0 auto;
+  margin-top: 10%;
+  padding: 12px 15px;
+
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid silver;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease-out;
+}
+
+.wrapper-dropdown .wrapper-list{
+  position: absolute;
+  top: 100%;
+  margin-top: 1px;
+  padding-left: 0px;
+  left: -1px;
+  right: -1px;
+
+  background: #fff;
+  border-radius: 0 0 5px 5px;
+  border: 1px solid silver;
+  border-top: none;
+  list-style: none;
+  transition: all 0.3s ease-out;
+  height: 300px;
+  overflow-y: auto;
+}
+
+
+.wrapper-dropdown .wrapper-list li {
+  display: block;
+  text-decoration: none;
+  transition: all 0.3s ease-out;
+  border-bottom: 1px solid #e6e8ea;
+  min-height: 20px;
+}
+
+.wrapper-dropdown .wrapper-list div li label {
+  display: inline-block;
+  padding: 10px 10px 10px 30px; /* Same padding as the button */
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+}
+
+.wrapper-dropdown .wrapper-list .active {
+  background: #F0FFFF;
+}
+
+.wrapper-dropdown .wrapper-list div li:hover {
+  background: #f0f0f0;
+  cursor: pointer;
+}
