@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {IoIosArrowDown, IoIosArrowUp, IoMdCheckmark} from 'react-icons/io'
+import {getTitle} from './helpers'
 import './styles.css'
 
 
@@ -13,9 +14,6 @@ export default class Dropdown extends Component {
       query: '',
       wrapperRef: null
     }
-
-    this.setWrapperRef = this.setWrapperRef.bind(this)
-    this.handleClickOutside = this.handleClickOutside.bind(this)
   }
 
   /* Functionality to handle click outside using a wrapper reference */
@@ -73,23 +71,25 @@ export default class Dropdown extends Component {
   /* Modify selected items */
   toggleSelect = i => {
     const {options} = this.state
+    const index = options.indexOf(options.filter(o => o.show)[i])
     const {multiselect} = this.props
 
     // If multiselect, toggle current selected value
     if(multiselect){
-      options[i].selected = !options[i].selected
-      const title = options.filter(o => o.selected).map(o => o.label).join()
+      options[index].selected = !options[index].selected
+      console.log('multiselect', options[index])
+      const title = getTitle(options) 
       this.setState({...this.state, options, title}, () => this.handleDropdownValueChange())
     }
     // If single select, make all options to be inactive except for selected one
     else{
       // No need to reselect already chosen one
-      if(options[i].selected) return
+      if(options[index].selected) return
 
       const newOptions = options.map(o => {
         return {...o, selected: false}
       })
-      newOptions[i].selected = true
+      newOptions[index].selected = true
       this.setState({...this.state, options: newOptions, title: newOptions[i].label}, () => this.handleDropdownValueChange())
     }
   }
@@ -99,7 +99,7 @@ export default class Dropdown extends Component {
     const newOptions = this.state.options.filter(o => o.show).map(o => {
       return {...o, selected: true}
     })
-    const title = newOptions.filter(o => o.selected).map(o => o.label).join()
+    const title = getTitle(newOptions) 
     this.setState({...this.state, options: newOptions, title}, () => this.handleDropdownValueChange())
   }
 
@@ -108,7 +108,7 @@ export default class Dropdown extends Component {
     const newOptions = this.state.options.filter(o => o.show).map(o => {
       return {...o, selected: false}
     })
-    this.setState({...this.state, options: newOptions}, () => this.handleDropdownValueChange())
+    this.setState({...this.state, options: newOptions, title: this.props.title}, () => this.handleDropdownValueChange())
   }
 
   /* Handle search queries */
