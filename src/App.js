@@ -1,24 +1,20 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Dropdown from './Dropdown'
 
 function App() {
+  const generateOption = i => {
+    let r = Math.random().toString(36).substring(7)
+    return r
+  }
+
+  const options = [ ...Array(100).keys() ].map((i) => generateOption(i))
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div>
+      <header className='header'>
+        Hive Dropdown Demo
       </header>
+      <Dropdown title='Title' options={options} multiselect={true}/>
     </div>
   );
 }
