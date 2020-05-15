@@ -7,12 +7,14 @@ import Dropdown from './Dropdown'
 
 const options = ['Option 1', 'Option 2', 'Option 3']
 
-function App(){
-  return (
-    <div>
-      <Dropdown title='Title' options={options} multiselect={true} search={true} selectAll={true}/>
-    </div>
-  );
+export default class App extends Component {
+  render() {
+    return (
+      <div>
+        <Dropdown title='Title' options={options} multiselect={true} search={true} selectAll={true}/>
+      </div>
+    );
+  }
 }
 ```
 
